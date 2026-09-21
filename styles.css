@@ -9,7 +9,7 @@
   --paper-raised: #FFFCF6;
   --ink: #1F1A16;
   --ink-soft: #52483F;
-  --ink-faint: #7A6E61;
+  --ink-faint: #756858;
   --rule: #E4D9CA;
   --rule-strong: #D3C4B0;
   --accent: #A8552A;
@@ -196,6 +196,9 @@ h2 {
 }
 
 .topbar .phone {
+  display: inline-block;
+  padding: 11px 0;
+  margin: -11px 0;
   font-size: 14px;
   font-weight: 600;
   color: var(--ink-soft);
@@ -564,6 +567,12 @@ h2 {
 /* ─────────────────────────────────────────────────────────────
    Footer
    ───────────────────────────────────────────────────────────── */
+.foot a {
+  display: inline-block;
+  padding: 12px 0;
+  margin: -12px 0;
+}
+
 .foot {
   display: flex;
   flex-wrap: wrap;
