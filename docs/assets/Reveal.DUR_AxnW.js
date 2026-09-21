@@ -1,0 +1,1 @@
+import{n as e,r as t,t as n}from"./react.bC8b5QLu.js";var r=t();function i({children:t,delay:i=0,className:a}){return e()?(0,r.jsx)(`div`,{className:a,children:t}):(0,r.jsx)(n.div,{className:a,initial:{opacity:0,y:10},whileInView:{opacity:1,y:0},viewport:{once:!0,margin:`-40px`},transition:{duration:.38,ease:[.32,.72,0,1],delay:i},children:t})}export{i as default};
