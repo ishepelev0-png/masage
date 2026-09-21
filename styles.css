@@ -142,7 +142,7 @@ h1, h2, h3, .wordmark, .price-value, .panel-title {
 
 h1 {
   margin: 0;
-  font-size: clamp(38px, 9vw, 56px);
+  font-size: clamp(38px, 9vw, 62px);
   font-weight: 600;
   line-height: 1.04;
   letter-spacing: -0.02em;
@@ -366,19 +366,25 @@ h2 {
    massage list (no pages behind them), so a different form:
    inline tags, not rows and not cards.
    ───────────────────────────────────────────────────────────── */
-.tags {
+/* Three names with nothing behind them need no boxes: pills were the
+   only 999px radius on a page built from straight rules, and a plain
+   typographic list carries them without the template look. */
+.proc {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: var(--s-2);
 }
 
-.tag {
-  padding: 10px 16px;
-  border: 1px solid var(--rule-strong);
-  border-radius: 999px;
-  background: var(--paper-raised);
-  font-size: 14px;
+.proc li {
+  font-family: 'Fraunces', Georgia, serif;
+  font-optical-sizing: auto;
+  font-size: 20px;
   font-weight: 600;
+  letter-spacing: -0.01em;
+  font-variation-settings: 'SOFT' 40;
   color: var(--ink);
 }
 
@@ -386,6 +392,60 @@ h2 {
   margin: var(--s-3) 0 0;
   font-size: 14px;
   color: var(--ink-faint);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Photography
+   The photo is documentary, so it is cropped to the work itself and
+   given a warm wash that sits it inside the palette instead of
+   fighting it. No shadow — the page has no lifted surfaces except
+   the closing panel.
+   ───────────────────────────────────────────────────────────── */
+/* Text leads, the portrait closes the row: a column of text that ends
+   short reads as a paragraph ending, while a short column in the
+   terminal position reads as leftover space. */
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr);
+  gap: var(--s-5);
+  align-items: start;
+}
+
+.shot { margin: 0; }
+
+.shot .frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--r-md);
+  background: var(--paper-raised);
+}
+
+.shot .frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: #C08553;
+  mix-blend-mode: multiply;
+  opacity: .12;
+}
+
+.shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: saturate(.85) contrast(1.02);
+}
+
+.shot figcaption {
+  margin-top: var(--s-3);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-faint);
+}
+
+@media (max-width: 640px) {
+  .split { grid-template-columns: 1fr; gap: var(--s-4); }
 }
 
 /* Outcome list — the marker repeats the eyebrow's short rule instead
