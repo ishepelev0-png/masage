@@ -1,63 +1,561 @@
+/* ─────────────────────────────────────────────────────────────
+   Tokens
+   Palette: warm paper + ink + a single terracotta accent.
+   Accent is reserved for the primary CTA and the lead price —
+   spending it anywhere else flattens the hierarchy it creates.
+   ───────────────────────────────────────────────────────────── */
 :root {
-  --bg: #FAF6F0;
-  --bg-card: #FFFFFF;
-  --border: #EDE4D8;
-  --text: #221D19;
-  --text-muted: #4A4038;
-  --text-faint: #8A7E70;
-  --accent: #B5602E;
-  --dark-panel: #221D19;
-  --dark-panel-text: #FAF6F0;
-  --dark-panel-muted: #C9BEAF;
-  --dark-panel-border: #4A4038;
-  box-sizing: border-box;
-  padding-top: env(safe-area-inset-top, 0px);
-  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --paper: #F7F2EA;
+  --paper-raised: #FFFCF6;
+  --ink: #1F1A16;
+  --ink-soft: #52483F;
+  --ink-faint: #7A6E61;
+  --rule: #E4D9CA;
+  --rule-strong: #D3C4B0;
+  --accent: #A8552A;
+  --accent-hover: #8E4620;
+  --panel: #241E19;
+  --panel-text: #F7F2EA;
+  --panel-muted: #BFB2A2;
+  --panel-rule: #4A3F35;
+  --grain: .035;
+
+  /* Rhythm: gaps between movements are far larger than gaps within
+     one, so proximity does the grouping instead of borders. */
+  --s-1: 6px;
+  --s-2: 10px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 36px;
+  --s-6: 56px;
+  --s-7: 88px;
+
+  /* Radii scale with element size; rows deliberately stay square. */
+  --r-sm: 6px;
+  --r-md: 12px;
+  --r-lg: 20px;
+
+  --ease-out: cubic-bezier(0.32, 0.72, 0, 1);
+  --dur-fast: 140ms;
+  --dur-mid: 240ms;
+  --dur-enter: 380ms;
 }
+
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #1C1815; --bg-card: #262019; --border: #3A322A; --text: #F5EFE6;
-    --text-muted: #C9BEAF; --text-faint: #8A7E70; --dark-panel: #0F0D0B;
-    --dark-panel-text: #F5EFE6; --dark-panel-muted: #B3A896; --dark-panel-border: #3A322A;
+    --paper: #17130F;
+    --paper-raised: #1F1A15;
+    --ink: #F4EDE2;
+    --ink-soft: #C6B9A8;
+    --ink-faint: #938673;
+    --rule: #332B23;
+    --rule-strong: #453A2F;
+    --accent: #D8834F;
+    --accent-hover: #E89A68;
+    --panel: #241E19;
+    --panel-text: #F4EDE2;
+    --panel-muted: #BFB2A2;
+    --panel-rule: #453A2F;
+    --grain: .04;
   }
 }
+
 :root[data-theme="dark"] {
-  --bg: #1C1815; --bg-card: #262019; --border: #3A322A; --text: #F5EFE6;
-  --text-muted: #C9BEAF; --text-faint: #8A7E70; --dark-panel: #0F0D0B;
-  --dark-panel-text: #F5EFE6; --dark-panel-muted: #B3A896; --dark-panel-border: #3A322A;
+  --paper: #17130F;
+  --paper-raised: #1F1A15;
+  --ink: #F4EDE2;
+  --ink-soft: #C6B9A8;
+  --ink-faint: #938673;
+  --rule: #332B23;
+  --rule-strong: #453A2F;
+  --accent: #D8834F;
+  --accent-hover: #E89A68;
+  --panel: #241E19;
+  --panel-text: #F4EDE2;
+  --panel-muted: #BFB2A2;
+  --panel-rule: #453A2F;
+  --grain: .04;
 }
-html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+
+/* ─────────────────────────────────────────────────────────────
+   Base
+   ───────────────────────────────────────────────────────────── */
 * { box-sizing: border-box; }
-body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Karla', sans-serif; -webkit-font-smoothing: antialiased; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Karla', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Paper grain — materiality that ties to the palette (linen, oil,
+   skin) without reaching for a gradient or a blob. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: var(--grain);
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) body::before { mix-blend-mode: screen; }
+}
+:root[data-theme="dark"] body::before { mix-blend-mode: screen; }
+
 a { color: inherit; text-decoration: none; }
-.wrap { width: 100%; max-width: 720px; margin: 0 auto; padding: 0 24px 96px; }
-.topbar { display: flex; align-items: center; justify-content: space-between; padding: 28px 0; }
-.logo { font-family: 'Fraunces', serif; font-weight: 600; font-size: 18px; letter-spacing: .02em; }
-.topbar a.phone { font-size: 14px; font-weight: 600; color: var(--accent); white-space: nowrap; }
-.hero { padding: 40px 0 56px; display: flex; flex-direction: column; gap: 20px; }
-.eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
-h1 { margin: 0; font-family: 'Fraunces', serif; font-weight: 600; font-size: 40px; line-height: 1.1; color: var(--text); }
-.hero p { margin: 0; font-size: 17px; line-height: 1.6; color: var(--text-muted); max-width: 520px; }
-.cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
-.btn { font-weight: 600; font-size: 15px; padding: 14px 26px; border-radius: 8px; display: inline-flex; align-items: center; min-height: 44px; }
-.btn-primary { background: var(--accent); color: #FAF6F0; border: 1px solid var(--accent); transition: opacity .15s ease; }
-.btn-primary:hover { opacity: .88; }
-.btn-outline { border: 1px solid var(--border); color: var(--text); }
-.btn-outline:hover { background: var(--text); color: var(--bg); border-color: var(--text); }
-section { padding: 40px 0 0; display: flex; flex-direction: column; gap: 20px; }
-h2 { margin: 0; font-family: 'Fraunces', serif; font-weight: 600; font-size: 24px; color: var(--text); }
-.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
-.chip { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; font-size: 15px; font-weight: 600; }
-.chip.full { grid-column: 1 / -1; }
-.price-list { display: flex; flex-direction: column; gap: 12px; }
-.price-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; transition: border-color .15s ease; }
-.price-card:hover { border-color: var(--accent); }
-.price-name { font-size: 16px; font-weight: 600; }
-.price-sub { font-size: 14px; color: var(--text-faint); margin-top: 2px; }
-.price-amount { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 600; color: var(--accent); white-space: nowrap; }
-.contact-panel { margin-top: 56px; padding: 32px 24px; background: var(--dark-panel); border-radius: 16px; display: flex; flex-direction: column; gap: 18px; }
-.contact-panel .title { font-family: 'Fraunces', serif; font-weight: 600; font-size: 22px; color: var(--dark-panel-text); }
-.contact-panel .desc { font-size: 15px; line-height: 1.6; color: var(--dark-panel-muted); }
-.contact-panel .cta-row a.btn-outline { border: 1px solid var(--dark-panel-border); color: var(--dark-panel-text); }
-.contact-panel .cta-row a.btn-outline:hover { background: var(--dark-panel-text); color: var(--dark-panel); }
-@media (max-width: 420px) { h1 { font-size: 34px; } .grid2 { grid-template-columns: 1fr 1fr; } }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.wrap {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 var(--s-4) var(--s-7);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Typography
+   Fraunces carries the voice (soft, warm, optical-size aware);
+   Karla keeps the running text plain so the serif stays special.
+   ───────────────────────────────────────────────────────────── */
+h1, h2, h3, .wordmark, .price-value, .panel-title {
+  font-family: 'Fraunces', Georgia, serif;
+  font-optical-sizing: auto;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(38px, 9vw, 56px);
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  font-variation-settings: 'SOFT' 40;
+}
+
+h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  font-family: 'Karla', sans-serif;
+}
+
+.lede {
+  margin: 0;
+  max-width: 54ch;
+  font-size: 18px;
+  line-height: 1.65;
+  color: var(--ink-soft);
+}
+
+.body-text {
+  margin: 0;
+  max-width: 62ch;
+  color: var(--ink-soft);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Header
+   ───────────────────────────────────────────────────────────── */
+.topbar {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding: var(--s-5) 0 0;
+}
+
+.wordmark {
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  font-variation-settings: 'SOFT' 40;
+}
+
+.topbar .phone {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+.topbar .phone:hover { color: var(--ink); }
+
+/* ─────────────────────────────────────────────────────────────
+   Hero
+   ───────────────────────────────────────────────────────────── */
+.hero {
+  padding: var(--s-7) 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.eyebrow::before {
+  content: '';
+  width: 28px;
+  height: 1px;
+  background: var(--rule-strong);
+  flex: none;
+}
+
+.cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-3);
+  margin-top: var(--s-2);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Buttons — one filled CTA per view, everything else quiet.
+   Press feedback is instant (transform only, ~100ms).
+   ───────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  min-height: 48px;
+  padding: 0 26px;
+  border-radius: var(--r-sm);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: .01em;
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    transform 100ms var(--ease-out);
+}
+.btn:active { transform: scale(0.985); }
+
+.btn-primary {
+  background: var(--accent);
+  color: #FFF9F2;
+  border: 1px solid var(--accent);
+}
+.btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+
+.btn-quiet {
+  border: 1px solid var(--rule-strong);
+  color: var(--ink);
+}
+.btn-quiet:hover { border-color: var(--ink); }
+
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+.link-arrow span { transition: transform var(--dur-fast) var(--ease-out); }
+.link-arrow:hover { color: var(--ink); }
+.link-arrow:hover span { transform: translateX(-3px); }
+
+/* ─────────────────────────────────────────────────────────────
+   Sections
+   ───────────────────────────────────────────────────────────── */
+.movement { padding-top: var(--s-7); }
+
+.sec-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding-bottom: var(--s-3);
+  border-bottom: 1px solid var(--rule-strong);
+  margin-bottom: var(--s-4);
+}
+
+.sec-meta {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-faint);
+  white-space: nowrap;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Service index — an editorial list, not a card grid.
+   The arrow is the affordance: it only moves on intent.
+   ───────────────────────────────────────────────────────────── */
+.index { display: flex; flex-direction: column; }
+
+.svc {
+  display: grid;
+  grid-template-columns: 34px 1fr auto;
+  align-items: center;
+  gap: var(--s-3);
+  padding: 20px 8px 20px 0;
+  border-bottom: 1px solid var(--rule);
+  transition: transform 100ms var(--ease-out);
+}
+.svc:last-child { border-bottom: 0; }
+
+.svc-num {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.svc-name {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  font-variation-settings: 'SOFT' 40;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.svc-arrow {
+  font-size: 17px;
+  color: var(--accent);
+  opacity: 0;
+  transform: translateX(-6px);
+  transition:
+    opacity var(--dur-mid) var(--ease-out),
+    transform var(--dur-mid) var(--ease-out);
+}
+
+.svc:hover .svc-name { color: var(--accent); }
+.svc:hover .svc-arrow,
+.svc:focus-visible .svc-arrow { opacity: 1; transform: translateX(0); }
+.svc:active { transform: scale(0.995); }
+
+/* Touch devices have no hover, so the affordance must be permanent. */
+@media (hover: none) {
+  .svc-arrow { opacity: .5; transform: none; }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Hardware procedures — a different kind of thing from the
+   massage list (no pages behind them), so a different form:
+   inline tags, not rows and not cards.
+   ───────────────────────────────────────────────────────────── */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+.tag {
+  padding: 10px 16px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  background: var(--paper-raised);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.note {
+  margin: var(--s-3) 0 0;
+  font-size: 14px;
+  color: var(--ink-faint);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Prices — a menu, not three identical cards. The lead line is
+   the focal point; the rest stay quiet so it can be.
+   ───────────────────────────────────────────────────────────── */
+.price { display: flex; flex-direction: column; }
+
+.price-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-4);
+  padding: 16px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.price-row:last-child { border-bottom: 0; }
+
+.price-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.price-meta {
+  display: block;
+  margin-top: 2px;
+  font-size: 13px;
+  color: var(--ink-faint);
+}
+
+.price-value {
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.price-row--lead { padding: 22px 0; }
+.price-row--lead .price-name { font-size: 18px; }
+.price-row--lead .price-value {
+  font-size: 30px;
+  color: var(--accent);
+  letter-spacing: -0.01em;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Contact panel — the closing statement, the one dark surface.
+   ───────────────────────────────────────────────────────────── */
+.panel {
+  margin-top: var(--s-7);
+  padding: var(--s-6) var(--s-5);
+  background: var(--panel);
+  color: var(--panel-text);
+  border: 1px solid var(--panel-rule);
+  border-radius: var(--r-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+}
+
+.panel-title {
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  font-variation-settings: 'SOFT' 40;
+}
+
+.panel-desc {
+  margin: 0;
+  font-size: 16px;
+  color: var(--panel-muted);
+  max-width: 44ch;
+}
+
+.panel .btn-quiet {
+  border-color: var(--panel-rule);
+  color: var(--panel-text);
+}
+.panel .btn-quiet:hover { border-color: var(--panel-text); }
+
+/* ─────────────────────────────────────────────────────────────
+   Footer
+   ───────────────────────────────────────────────────────────── */
+.foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-2);
+  margin-top: var(--s-5);
+  font-size: 13px;
+  color: var(--ink-faint);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Mobile quick action — this business converts over WhatsApp,
+   so on a phone the action stays within thumb reach.
+   ───────────────────────────────────────────────────────────── */
+.quickbar { display: none; }
+
+@media (max-width: 640px) {
+  .quickbar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+    display: flex;
+    gap: var(--s-2);
+    padding: 10px var(--s-4) calc(10px + env(safe-area-inset-bottom, 0px));
+    background: var(--paper);
+    border-top: 1px solid var(--rule-strong);
+  }
+  .quickbar .btn { flex: 1; min-height: 46px; padding: 0 14px; font-size: 14px; }
+  body { padding-bottom: 84px; }
+}
+
+/* The bar leaves toward the edge it came from, and accelerates out —
+   an exit should not linger the way an entrance settles. */
+.quickbar {
+  transition:
+    transform var(--dur-mid) var(--ease-out),
+    opacity var(--dur-mid) var(--ease-out);
+}
+.quickbar.is-hidden {
+  transform: translateY(110%);
+  opacity: 0;
+  pointer-events: none;
+  transition-timing-function: cubic-bezier(0.4, 0, 1, 1);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Entrance — one short, staggered settle on load. Transform and
+   opacity only; capped so nothing waits on decoration.
+   ───────────────────────────────────────────────────────────── */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.rise {
+  animation: rise var(--dur-enter) var(--ease-out) both;
+}
+.rise-1 { animation-delay: 40ms; }
+.rise-2 { animation-delay: 100ms; }
+.rise-3 { animation-delay: 160ms; }
+.rise-4 { animation-delay: 220ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: .01ms !important;
+  }
+  .svc-arrow { opacity: .5; transform: none; }
+  .btn:active, .svc:active { transform: none; }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Narrow phones
+   ───────────────────────────────────────────────────────────── */
+@media (max-width: 420px) {
+  :root { --s-7: 64px; --s-6: 44px; }
+  .wrap { padding-left: 20px; padding-right: 20px; }
+  .panel { padding: var(--s-5) var(--s-4); }
+  .svc { grid-template-columns: 28px 1fr auto; }
+  .svc-name { font-size: 19px; }
+  .price-row--lead .price-value { font-size: 26px; }
+  .cta-row .btn { flex: 1 1 100%; }
+}
