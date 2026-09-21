@@ -115,6 +115,10 @@ body::before {
 
 a { color: inherit; text-decoration: none; }
 
+/* An image can never be allowed to blow out its column, whatever
+   rules do or do not reach it. */
+img { max-width: 100%; height: auto; }
+
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
