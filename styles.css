@@ -388,6 +388,34 @@ h2 {
   color: var(--ink-faint);
 }
 
+/* Outcome list — the marker repeats the eyebrow's short rule instead
+   of a checkmark or a bullet, so the page keeps one vocabulary. */
+.gains {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  max-width: 58ch;
+}
+
+.gains li {
+  position: relative;
+  padding-left: 30px;
+  color: var(--ink-soft);
+}
+
+.gains li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: .72em;
+  width: 16px;
+  height: 1px;
+  background: var(--accent);
+}
+
 /* ─────────────────────────────────────────────────────────────
    Prices — a menu, not three identical cards. The lead line is
    the focal point; the rest stay quiet so it can be.
